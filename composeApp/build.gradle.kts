@@ -45,7 +45,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             //Voyager-navigation
             implementation(libs.voyager.navigator)
-
+            implementation(libs.lifecycle.viewmodel.compose)
         }
     }
 }
