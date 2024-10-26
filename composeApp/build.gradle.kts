@@ -46,6 +46,8 @@ kotlin {
             //Voyager-navigation
             implementation(libs.voyager.navigator)
             implementation(libs.lifecycle.viewmodel.compose)
+            implementation(libs.kmp.date.time.picker)
+            implementation(libs.cmp.image.pick.n.crop)
         }
     }
 }

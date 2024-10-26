@@ -92,8 +92,29 @@ class AuthViewModel: ViewModel() {
                     )
                 }
             }
+            is AuthUIEvents.UpdateDateOfBirth -> {
+                _uiState.update {
+                    it.copy(
+                        dateOfBirth = event.text
+                    )
+                }
+            }
             AuthUIEvents.OnLoginClick -> {}
             AuthUIEvents.OnRegisterClick -> {}
+            AuthUIEvents.TogglePasswordVisibility -> {
+                _uiState.update {
+                    it.copy(
+                        passwordVisibility = !uiState.value.passwordVisibility
+                    )
+                }
+            }
+            AuthUIEvents.ToggleConfirmPasswordVisibility -> {
+                _uiState.update {
+                    it.copy(
+                        confirmPasswordVisibility = !uiState.value.confirmPasswordVisibility
+                    )
+                }
+            }
         }
     }
 

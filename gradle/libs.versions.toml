@@ -1,7 +1,7 @@
 [versions]
 agp = "8.7.0"
 android-compileSdk = "34"
-android-minSdk = "24"
+android-minSdk = "26"
 android-targetSdk = "34"
 androidx-activityCompose = "1.9.1"
 androidx-appcompat = "1.7.0"
@@ -11,12 +11,16 @@ androidx-espresso-core = "3.6.1"
 androidx-lifecycle = "2.8.0"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
-compose-plugin = "1.6.11"
+cmpImagePickNCrop = "1.0.4"
+compose-plugin = "1.7.0"
 junit = "4.13.2"
+kmpDateTimePicker = "1.0.5"
 kotlin = "2.0.20"
 voyagerNavigator = "1.1.0-beta02"
 
 [libraries]
+cmp-image-pick-n-crop = { module = "network.chaintech:cmp-image-pick-n-crop", version.ref = "cmpImagePickNCrop" }
+kmp-date-time-picker = { module = "network.chaintech:kmp-date-time-picker", version.ref = "kmpDateTimePicker" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
