@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,35 +39,36 @@ class WelcomeScreen: Screen {
 @Composable
 fun WelcomeScreenBody() {
     val navigator = LocalNavigator.currentOrThrow
-    Column(modifier = Modifier.fillMaxSize()
-        .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Image(painter = painterResource(resource = Res.drawable.undraw_successful_purchase_re_mpig), contentDescription = "Logo")
-        Spacer(modifier = Modifier.height(18.dp))
-        Text(text = stringResource(Res.string.all_your_shopping_in_one_app),
-            style = MaterialTheme.typography.displaySmall)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = stringResource(Res.string.welcome_screen_note))
-        Spacer(modifier = Modifier.height(32.dp))
-        Row(modifier = Modifier.fillMaxWidth()) {
-            ButtonSimple(
-                onClick = { navigator.push(AuthScreen()) },
-                label = "Sign In",
-                modifier = Modifier.weight(1f).padding(end = 8.dp)
-            )
+    Scaffold{
 
-            ButtonSimple(
-                onClick = { /*TODO*/ },
-                label = "Sign Up",
-                modifier = Modifier.weight(1f).padding(start = 8.dp),
-                backgroundColor = MaterialTheme.colorScheme.onPrimary,
-                contentColor = MaterialTheme.colorScheme.primary
-            )
+        Column(modifier = Modifier.fillMaxSize()
+            .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(painter = painterResource(resource = Res.drawable.undraw_successful_purchase_re_mpig), contentDescription = "Logo")
+            Spacer(modifier = Modifier.height(18.dp))
+            Text(text = stringResource(Res.string.all_your_shopping_in_one_app),
+                style = MaterialTheme.typography.displaySmall)
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = stringResource(Res.string.welcome_screen_note))
+            Spacer(modifier = Modifier.height(32.dp))
+            Row(modifier = Modifier.fillMaxWidth()) {
+                ButtonSimple(
+                    onClick = { navigator.push(AuthScreen()) },
+                    label = "Sign In",
+                    modifier = Modifier.weight(1f).padding(end = 8.dp)
+                )
+
+                ButtonSimple(
+                    onClick = { /*TODO*/ },
+                    label = "Sign Up",
+                    modifier = Modifier.weight(1f).padding(start = 8.dp),
+                    backgroundColor = MaterialTheme.colorScheme.onPrimary,
+                    contentColor = MaterialTheme.colorScheme.primary
+                )
+            }
         }
-
-
     }
 }
 

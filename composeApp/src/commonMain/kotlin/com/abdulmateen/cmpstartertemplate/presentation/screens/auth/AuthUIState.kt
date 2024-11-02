@@ -15,5 +15,8 @@ data class AuthUIState(
     val passwordReg: String = "",
     val confirmPassword: String = "",
     val gender: String = "",
-    val genderList: List<String> = listOf("Male", "Female")
+    val genderList: List<String> = listOf("Male", "Female"),
+    val confirmPasswordVisibility: Boolean = false,
+    val dummyData: String = ""
+
 )

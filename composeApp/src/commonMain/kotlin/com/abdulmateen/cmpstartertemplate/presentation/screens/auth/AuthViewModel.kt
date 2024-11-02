@@ -1,17 +1,51 @@
 package com.abdulmateen.cmpstartertemplate.presentation.screens.auth
 
 import androidx.lifecycle.ViewModel
+import com.abdulmateen.cmpstartertemplate.network.ApiStatus
+import com.abdulmateen.cmpstartertemplate.repository.MainRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class AuthViewModel: ViewModel() {
+class AuthViewModel(
+    private val repo: MainRepository
+): ViewModel() {
 
     private val _uiState = MutableStateFlow(AuthUIState())
     val uiState: StateFlow<AuthUIState> = _uiState
 
     val flowEvent = MutableSharedFlow<AuthFlowEvents>()
+
+    init {
+        loadData()
+    }
+
+    private fun loadData(){
+        CoroutineScope(Dispatchers.IO).launch {
+            repo.getHeroes().collect{response ->
+                when(response.status){
+                    ApiStatus.SUCCESS -> {
+                        _uiState.update {
+                            it.copy(
+                                dummyData = response.data.toString()
+                            )
+                        }
+                    }
+                    ApiStatus.ERROR -> {
+                        flowEvent.emit(AuthFlowEvents.PopUpErrorMessage(response.message ?: "Something went wrong!"))
+                    }
+                    ApiStatus.LOADING -> {
+                        uiEvent(AuthUIEvents.UpdateLoadingStatus(true))
+                    }
+                }
+            }
+        }
+    }
 
     fun uiEvent(event: AuthUIEvents){
         when(event){
@@ -92,8 +126,29 @@ class AuthViewModel: ViewModel() {
                     )
                 }
             }
+            is AuthUIEvents.UpdateDateOfBirth -> {
+                _uiState.update {
+                    it.copy(
+                        dateOfBirth = event.text
+                    )
+                }
+            }
             AuthUIEvents.OnLoginClick -> {}
             AuthUIEvents.OnRegisterClick -> {}
+            AuthUIEvents.TogglePasswordVisibility -> {
+                _uiState.update {
+                    it.copy(
+                        passwordVisibility = !uiState.value.passwordVisibility
+                    )
+                }
+            }
+            AuthUIEvents.ToggleConfirmPasswordVisibility -> {
+                _uiState.update {
+                    it.copy(
+                        confirmPasswordVisibility = !uiState.value.confirmPasswordVisibility
+                    )
+                }
+            }
         }
     }
 
