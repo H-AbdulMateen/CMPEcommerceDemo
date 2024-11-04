@@ -205,7 +205,7 @@ fun LoginContent(
         Spacer(modifier = Modifier.height(16.dp))
         ButtonSimple(
             label = "Login",
-            onClick = {},
+            onClick = { uiEvent(AuthUIEvents.OnLoginClick) },
             modifier = Modifier.fillMaxWidth()
         )
         if (uiState.isLoading){

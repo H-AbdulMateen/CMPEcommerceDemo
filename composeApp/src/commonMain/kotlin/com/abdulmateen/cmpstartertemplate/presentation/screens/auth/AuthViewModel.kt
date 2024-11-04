@@ -2,6 +2,7 @@ package com.abdulmateen.cmpstartertemplate.presentation.screens.auth
 
 import androidx.lifecycle.ViewModel
 import com.abdulmateen.cmpstartertemplate.network.ApiStatus
+import com.abdulmateen.cmpstartertemplate.network.request.LoginRequestBody
 import com.abdulmateen.cmpstartertemplate.repository.MainRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,15 +22,19 @@ class AuthViewModel(
 
     val flowEvent = MutableSharedFlow<AuthFlowEvents>()
 
-    init {
-        loadData()
-    }
 
-    private fun loadData(){
+    private fun login(){
         CoroutineScope(Dispatchers.IO).launch {
-            repo.getHeroes().collect{response ->
+            repo.login(
+                body = LoginRequestBody(
+                    expiresInMins = 45,
+                    password = uiState.value.password,
+                    username = uiState.value.username
+                )
+            ).collect{ response ->
                 when(response.status){
                     ApiStatus.SUCCESS -> {
+                        uiEvent(AuthUIEvents.UpdateLoadingStatus(false))
                         _uiState.update {
                             it.copy(
                                 dummyData = response.data.toString()
@@ -37,6 +42,7 @@ class AuthViewModel(
                         }
                     }
                     ApiStatus.ERROR -> {
+                        uiEvent(AuthUIEvents.UpdateLoadingStatus(false))
                         flowEvent.emit(AuthFlowEvents.PopUpErrorMessage(response.message ?: "Something went wrong!"))
                     }
                     ApiStatus.LOADING -> {
@@ -133,7 +139,9 @@ class AuthViewModel(
                     )
                 }
             }
-            AuthUIEvents.OnLoginClick -> {}
+            AuthUIEvents.OnLoginClick -> {
+                login()
+            }
             AuthUIEvents.OnRegisterClick -> {}
             AuthUIEvents.TogglePasswordVisibility -> {
                 _uiState.update {
