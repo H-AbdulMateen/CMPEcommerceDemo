@@ -1,5 +1,6 @@
 package com.abdulmateen.cmpstartertemplate.presentation.screens.auth
 
+import SlideTransition
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,9 +21,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -39,33 +42,33 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import cafe.adriel.voyager.transitions.ScreenTransition
 import com.abdulmateen.cmpstartertemplate.presentation.components.ButtonSimple
 import com.abdulmateen.cmpstartertemplate.presentation.components.DatePickerOutlinedTextField
 import com.abdulmateen.cmpstartertemplate.presentation.components.PasswordOutlinedTextField
 import com.abdulmateen.cmpstartertemplate.presentation.components.SimpleOutlinedTextField
 import com.abdulmateen.cmpstartertemplate.presentation.components.WheelDateTimePickerDialog
-import kotlinx.coroutines.flow.collect
+import com.abdulmateen.cmpstartertemplate.presentation.screens.dashboard.DashboardScreen
 import network.chaintech.cmpimagepickncrop.CMPImagePickNCropDialog
 import network.chaintech.cmpimagepickncrop.imagecropper.rememberImageCropper
-import org.koin.compose.getKoin
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
-class AuthScreen : Screen {
+@OptIn(ExperimentalVoyagerApi::class)
+class AuthScreen : Screen, ScreenTransition by SlideTransition() {
     @Composable
     override fun Content() {
         AuthScreenBody()
@@ -83,21 +86,48 @@ fun AuthScreenBody(
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { Tabs.entries.size })
     val selectedTabIndex = remember { derivedStateOf { pagerState.currentPage } }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val navigator = LocalNavigator.currentOrThrow
 
     LaunchedEffect(Unit){
         flowEvents.collect{event ->
             when(event){
                 is AuthFlowEvents.PopUpErrorMessage -> {
+                    scope.launch {
+                        val result = snackbarHostState
+                            .showSnackbar(
+                                message = event.message,
+                                actionLabel = "Cancel",
+                                // Defaults to SnackbarDuration.Short
+                                duration = SnackbarDuration.Short
+                            )
+                        when (result) {
+                            SnackbarResult.ActionPerformed -> {
+                                /* Handle snackbar action performed */
 
+                            }
+
+                            SnackbarResult.Dismissed -> {
+                                /* Handle snackbar dismissed */
+                            }
+                        }
+                    }
                 }
                 is AuthFlowEvents.PopUpSuccessMessage -> {
-
+                }
+                is AuthFlowEvents.LoginSuccess -> {
+                    navigator.popAll()
+                    navigator.replace(DashboardScreen())
                 }
             }
         }
     }
 
-    Scaffold {
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
+    ) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {

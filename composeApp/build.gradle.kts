@@ -51,6 +51,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             //Voyager-navigation
             implementation(libs.voyager.navigator)
+            implementation(libs.voyager.tab.navigator)
+            implementation(libs.voyager.transitions)
+
             implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.kmp.date.time.picker)
             implementation(libs.cmp.image.pick.n.crop)
@@ -62,6 +65,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+
 
         }
         iosMain.dependencies {

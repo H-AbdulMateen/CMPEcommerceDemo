@@ -32,22 +32,17 @@ class AuthViewModel(
                     username = uiState.value.username
                 )
             ).collect{ response ->
-                when(response.status){
-                    ApiStatus.SUCCESS -> {
-                        uiEvent(AuthUIEvents.UpdateLoadingStatus(false))
-                        _uiState.update {
-                            it.copy(
-                                dummyData = response.data.toString()
-                            )
-                        }
+                uiEvent(AuthUIEvents.UpdateLoadingStatus(response.loading))
+                response.data?.let {
+                    _uiState.update {
+                        it.copy(
+                            dummyData = response.data.toString()
+                        )
                     }
-                    ApiStatus.ERROR -> {
-                        uiEvent(AuthUIEvents.UpdateLoadingStatus(false))
-                        flowEvent.emit(AuthFlowEvents.PopUpErrorMessage(response.message ?: "Something went wrong!"))
-                    }
-                    ApiStatus.LOADING -> {
-                        uiEvent(AuthUIEvents.UpdateLoadingStatus(true))
-                    }
+                    flowEvent.emit(AuthFlowEvents.LoginSuccess)
+                }
+                response.error?.let {
+                    flowEvent.emit(AuthFlowEvents.PopUpErrorMessage(it))
                 }
             }
         }

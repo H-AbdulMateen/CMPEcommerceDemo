@@ -1,6 +1,7 @@
 package com.abdulmateen.cmpstartertemplate.repository
 
 import com.abdulmateen.cmpstartertemplate.network.Constants
+import com.abdulmateen.cmpstartertemplate.network.DataState
 import com.abdulmateen.cmpstartertemplate.network.NetWorkResult
 import com.abdulmateen.cmpstartertemplate.network.models.LoginResponse
 import com.abdulmateen.cmpstartertemplate.network.request.LoginRequestBody
@@ -24,36 +25,22 @@ class MainRepositoryImpl(
     private val httpClient: HttpClient
 ): MainRepository {
 
-    override suspend fun login(body: LoginRequestBody): Flow<NetWorkResult<LoginResponse>> = flow {
+    override suspend fun login(body: LoginRequestBody): Flow<DataState<LoginResponse>> = flow {
         try {
-            emit(NetWorkResult.Loading(isLoading = true))
+            emit(DataState.loading())
             val response = httpClient.post("https://dummyjson.com/auth/login"){
                 contentType(ContentType.Application.Json)
                 setBody(body)
             }.body<LoginResponse>()
-//            val response = httpClient.post {
-//                url {
-//                    protocol = URLProtocol.HTTPS
-//                    host = Constants.BASE_URL
-//                    path("auth/login")
-//                    contentType(ContentType.Application.Json)
-//                    setBody(body)
-//                }
-//            }.body<LoginResponse>()
-            emit(NetWorkResult.Loading(false))
-            emit(NetWorkResult.Success(response))
+            emit(DataState.success(response))
         } catch (e: ClientRequestException) { // 4xx errors
-            emit(NetWorkResult.Loading(false))
-            emit(NetWorkResult.Error(_data = null,exception = "Client error: ${e.response.status.description}"))
+            emit(DataState.error(e.response.status.description))
         } catch (e: ServerResponseException) { // 5xx errors
-            emit(NetWorkResult.Loading(false))
-            emit(NetWorkResult.Error(_data = null,exception = "Server error: ${e.response.status.description}"))
+            emit(DataState.error(e.response.status.description))
         } catch (e: IOException) { // Network or I/O errors
-            emit(NetWorkResult.Loading(false))
-            emit(NetWorkResult.Error(_data = null,exception = "Network error: ${e.message}"))
+            emit(DataState.error(e.message ?: "Something went wrong."))
         } catch (e: Exception) { // Other unhandled exceptions
-            emit(NetWorkResult.Loading(false))
-            emit(NetWorkResult.Error(_data = null,exception = "Unexpected error: ${e.message}"))
+            emit(DataState.error(e.message ?: "Something went wrong."))
         }
     }
 }
