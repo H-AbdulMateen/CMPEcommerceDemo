@@ -92,7 +92,7 @@ fun AuthScreenBody(
     LaunchedEffect(Unit){
         flowEvents.collect{event ->
             when(event){
-                is AuthFlowEvents.PopUpErrorMessage -> {
+                is AuthEvents.PopUpErrorMessage -> {
                     scope.launch {
                         val result = snackbarHostState
                             .showSnackbar(
@@ -113,9 +113,9 @@ fun AuthScreenBody(
                         }
                     }
                 }
-                is AuthFlowEvents.PopUpSuccessMessage -> {
+                is AuthEvents.PopUpSuccessMessage -> {
                 }
-                is AuthFlowEvents.LoginSuccess -> {
+                is AuthEvents.LoginSuccess -> {
                     navigator.popAll()
                     navigator.replace(DashboardScreen())
                 }
@@ -194,7 +194,7 @@ fun AuthScreenBody(
 fun LoginContent(
     modifier: Modifier = Modifier,
     uiState: AuthUIState,
-    uiEvent: (AuthUIEvents) -> Unit
+    uiEvent: (AuthActions) -> Unit
 ) {
     val state = rememberScrollState()
     Column(
@@ -215,7 +215,7 @@ fun LoginContent(
         Spacer(modifier = Modifier.height(16.dp))
         SimpleOutlinedTextField(
             value = uiState.username,
-            onValueChange = { uiEvent(AuthUIEvents.UpdateUsername(it)) },
+            onValueChange = { uiEvent(AuthActions.UpdateUsername(it)) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = "Username"
         )
@@ -223,11 +223,11 @@ fun LoginContent(
         PasswordOutlinedTextField(
             value = uiState.password,
             onValueChange = {
-                uiEvent(AuthUIEvents.UpdatePassword(it))
+                uiEvent(AuthActions.UpdatePassword(it))
             },
             isVisible = uiState.passwordVisibility,
             onVisibilityClick = {
-                uiEvent(AuthUIEvents.TogglePasswordVisibility)
+                uiEvent(AuthActions.TogglePasswordVisibility)
             },
             modifier = Modifier.fillMaxWidth(),
             placeholder = "Password"
@@ -235,7 +235,7 @@ fun LoginContent(
         Spacer(modifier = Modifier.height(16.dp))
         ButtonSimple(
             label = "Login",
-            onClick = { uiEvent(AuthUIEvents.OnLoginClick) },
+            onClick = { uiEvent(AuthActions.OnLoginClick) },
             modifier = Modifier.fillMaxWidth()
         )
         if (uiState.isLoading){
@@ -251,7 +251,7 @@ fun LoginContent(
 fun RegisterContent(
     modifier: Modifier = Modifier,
     uiState: AuthUIState,
-    uiEvent: (AuthUIEvents) -> Unit
+    uiEvent: (AuthActions) -> Unit
 ) {
     val state = rememberScrollState()
     var isCalendarVisible by remember { mutableStateOf(false) }
@@ -315,13 +315,13 @@ fun RegisterContent(
         Row(modifier = Modifier.fillMaxWidth()) {
             SimpleOutlinedTextField(
                 value = uiState.firstName,
-                onValueChange = { uiEvent(AuthUIEvents.UpdateFirstName(it)) },
+                onValueChange = { uiEvent(AuthActions.UpdateFirstName(it)) },
                 modifier = Modifier.weight(.1f).padding(end = 4.dp),
                 placeholder = "First Name"
             )
             SimpleOutlinedTextField(
                 value = uiState.lastName,
-                onValueChange = { uiEvent(AuthUIEvents.UpdateLastName(it)) },
+                onValueChange = { uiEvent(AuthActions.UpdateLastName(it)) },
                 modifier = Modifier.weight(.1f),
                 placeholder = "Last Name"
             )
@@ -329,14 +329,14 @@ fun RegisterContent(
         Spacer(modifier = Modifier.height(8.dp))
         SimpleOutlinedTextField(
             value = uiState.username,
-            onValueChange = { uiEvent(AuthUIEvents.UpdateUsername(it)) },
+            onValueChange = { uiEvent(AuthActions.UpdateUsername(it)) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = "Username"
         )
         Spacer(modifier = Modifier.height(8.dp))
         SimpleOutlinedTextField(
             value = uiState.email,
-            onValueChange = { uiEvent(AuthUIEvents.UpdateEmail(it)) },
+            onValueChange = { uiEvent(AuthActions.UpdateEmail(it)) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = "E-Mail"
         )
@@ -353,11 +353,11 @@ fun RegisterContent(
         PasswordOutlinedTextField(
             value = uiState.passwordReg,
             onValueChange = {
-                uiEvent(AuthUIEvents.UpdatePasswordReg(it))
+                uiEvent(AuthActions.UpdatePasswordReg(it))
             },
             isVisible = uiState.passwordVisibility,
             onVisibilityClick = {
-                uiEvent(AuthUIEvents.TogglePasswordVisibility)
+                uiEvent(AuthActions.TogglePasswordVisibility)
             },
             modifier = Modifier.fillMaxWidth(),
             placeholder = "Password"
@@ -366,11 +366,11 @@ fun RegisterContent(
         PasswordOutlinedTextField(
             value = uiState.confirmPassword,
             onValueChange = {
-                uiEvent(AuthUIEvents.UpdateConfirmPassword(it))
+                uiEvent(AuthActions.UpdateConfirmPassword(it))
             },
             isVisible = uiState.confirmPasswordVisibility,
             onVisibilityClick = {
-                uiEvent(AuthUIEvents.ToggleConfirmPasswordVisibility)
+                uiEvent(AuthActions.ToggleConfirmPasswordVisibility)
             },
             modifier = Modifier.fillMaxWidth(),
             placeholder = "Confirm Password"
@@ -386,7 +386,7 @@ fun RegisterContent(
         WheelDateTimePickerDialog(
             showDatePicker = isCalendarVisible,
             toggleDatePicker = { isCalendarVisible = it },
-            onDateSelection = { uiEvent(AuthUIEvents.UpdateDateOfBirth(it)) }
+            onDateSelection = { uiEvent(AuthActions.UpdateDateOfBirth(it)) }
         )
     }
 }

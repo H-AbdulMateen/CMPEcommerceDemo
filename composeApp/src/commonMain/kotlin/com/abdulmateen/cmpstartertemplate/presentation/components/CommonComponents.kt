@@ -1,8 +1,6 @@
 package com.abdulmateen.cmpstartertemplate.presentation.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -24,7 +22,6 @@ import cmpecommercedemo.composeapp.generated.resources.Res
 import cmpecommercedemo.composeapp.generated.resources.calendar
 import cmpecommercedemo.composeapp.generated.resources.password_hide
 import cmpecommercedemo.composeapp.generated.resources.password_visibility
-import com.abdulmateen.cmpstartertemplate.presentation.screens.auth.AuthUIEvents
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

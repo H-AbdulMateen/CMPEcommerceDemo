@@ -1,7 +1,6 @@
 package com.abdulmateen.cmpstartertemplate.presentation.screens.auth
 
 import androidx.lifecycle.ViewModel
-import com.abdulmateen.cmpstartertemplate.network.ApiStatus
 import com.abdulmateen.cmpstartertemplate.network.request.LoginRequestBody
 import com.abdulmateen.cmpstartertemplate.repository.MainRepository
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +19,7 @@ class AuthViewModel(
     private val _uiState = MutableStateFlow(AuthUIState())
     val uiState: StateFlow<AuthUIState> = _uiState
 
-    val flowEvent = MutableSharedFlow<AuthFlowEvents>()
+    val flowEvent = MutableSharedFlow<AuthEvents>()
 
 
     private fun login(){
@@ -32,120 +31,120 @@ class AuthViewModel(
                     username = uiState.value.username
                 )
             ).collect{ response ->
-                uiEvent(AuthUIEvents.UpdateLoadingStatus(response.loading))
+                uiEvent(AuthActions.UpdateLoadingStatus(response.loading))
                 response.data?.let {
                     _uiState.update {
                         it.copy(
                             dummyData = response.data.toString()
                         )
                     }
-                    flowEvent.emit(AuthFlowEvents.LoginSuccess)
+                    flowEvent.emit(AuthEvents.LoginSuccess)
                 }
                 response.error?.let {
-                    flowEvent.emit(AuthFlowEvents.PopUpErrorMessage(it))
+                    flowEvent.emit(AuthEvents.PopUpErrorMessage(it))
                 }
             }
         }
     }
 
-    fun uiEvent(event: AuthUIEvents){
+    fun uiEvent(event: AuthActions){
         when(event){
-            is AuthUIEvents.UpdateConfirmPassword -> {
+            is AuthActions.UpdateConfirmPassword -> {
                 _uiState.update {
                     it.copy(
                         confirmPassword = event.text
                     )
                 }
             }
-            is AuthUIEvents.UpdateEmail -> {
+            is AuthActions.UpdateEmail -> {
                 _uiState.update {
                     it.copy(
                         email = event.email
                     )
                 }
             }
-            is AuthUIEvents.UpdateFirstName -> {
+            is AuthActions.UpdateFirstName -> {
                 _uiState.update {
                     it.copy(
                         firstName = event.text
                     )
                 }
             }
-            AuthUIEvents.UpdateIsRememberCheck -> {
+            AuthActions.UpdateIsRememberCheck -> {
                 _uiState.update {
                     it.copy(
                         isRememberCheck = !uiState.value.isRememberCheck
                     )
                 }
             }
-            is AuthUIEvents.UpdateLastName -> {
+            is AuthActions.UpdateLastName -> {
                 _uiState.update {
                     it.copy(
                         lastName = event.text
                     )
                 }
             }
-            is AuthUIEvents.UpdateLoadingStatus -> {
+            is AuthActions.UpdateLoadingStatus -> {
                 _uiState.update {
                     it.copy(
                         isLoading = event.isLoading
                     )
                 }
             }
-            is AuthUIEvents.UpdatePassword -> {
+            is AuthActions.UpdatePassword -> {
                 _uiState.update {
                     it.copy(
                         password = event.password
                     )
                 }
             }
-            is AuthUIEvents.UpdatePasswordReg -> {
+            is AuthActions.UpdatePasswordReg -> {
                 _uiState.update {
                     it.copy(
                         passwordReg = event.text
                     )
                 }
             }
-            is AuthUIEvents.UpdatePhone -> {
+            is AuthActions.UpdatePhone -> {
                 _uiState.update {
                     it.copy(
                         phoneNumber = event.text
                     )
                 }
             }
-            is AuthUIEvents.UpdateUsername -> {
+            is AuthActions.UpdateUsername -> {
                 _uiState.update {
                     it.copy(
                         username = event.username
                     )
                 }
             }
-            is AuthUIEvents.UpdateUsernameReg -> {
+            is AuthActions.UpdateUsernameReg -> {
                 _uiState.update {
                     it.copy(
                         usernameReg = event.text
                     )
                 }
             }
-            is AuthUIEvents.UpdateDateOfBirth -> {
+            is AuthActions.UpdateDateOfBirth -> {
                 _uiState.update {
                     it.copy(
                         dateOfBirth = event.text
                     )
                 }
             }
-            AuthUIEvents.OnLoginClick -> {
+            AuthActions.OnLoginClick -> {
                 login()
             }
-            AuthUIEvents.OnRegisterClick -> {}
-            AuthUIEvents.TogglePasswordVisibility -> {
+            AuthActions.OnRegisterClick -> {}
+            AuthActions.TogglePasswordVisibility -> {
                 _uiState.update {
                     it.copy(
                         passwordVisibility = !uiState.value.passwordVisibility
                     )
                 }
             }
-            AuthUIEvents.ToggleConfirmPasswordVisibility -> {
+            AuthActions.ToggleConfirmPasswordVisibility -> {
                 _uiState.update {
                     it.copy(
                         confirmPasswordVisibility = !uiState.value.confirmPasswordVisibility

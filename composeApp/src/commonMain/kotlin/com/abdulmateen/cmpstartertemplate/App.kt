@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
 import com.abdulmateen.cmpstartertemplate.presentation.screens.WelcomeScreen
+import com.abdulmateen.cmpstartertemplate.presentation.screens.splash.SplashScreen
 import com.abdulmateen.cmpstartertemplate.presentation.theme.AppTheme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -19,6 +20,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     AppTheme {
-        Navigator(screen = WelcomeScreen())
+        Navigator(screen = SplashScreen())
     }
 }
