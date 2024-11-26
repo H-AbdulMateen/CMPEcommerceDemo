@@ -39,6 +39,8 @@ kotlin {
             implementation(libs.android.driver)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+            implementation(libs.ktor.client.okhttp)
+
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -59,9 +61,13 @@ kotlin {
             implementation(libs.cmp.image.pick.n.crop)
 
             implementation(libs.kotlinx.coroutines.core)
+            //Ktor
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
+
+
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
