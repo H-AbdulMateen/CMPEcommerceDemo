@@ -1,7 +1,7 @@
 package com.abdulmateen.cmpstartertemplate
 
 import android.app.Application
-import com.abdulmateen.cmpstartertemplate.di.initKoin
+import com.abdulmateen.cmpstartertemplate.core.di.initKoin
 import org.koin.android.ext.koin.androidContext
 
 class MyApplication: Application() {

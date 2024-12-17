@@ -9,6 +9,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -29,7 +31,9 @@ kotlin {
             isStatic = true
         }
     }
-    
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
     sourceSets {
         
         androidMain.dependencies {
@@ -66,6 +70,9 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
+            //room
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
 
 
             implementation(libs.koin.core)
@@ -78,6 +85,10 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
             implementation(libs.native.driver)
+        }
+
+        dependencies {
+            ksp(libs.androidx.room.compiler)
         }
     }
 }

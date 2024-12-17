@@ -1,10 +1,10 @@
 package com.abdulmateen.cmpstartertemplate.repository
 
-import com.abdulmateen.cmpstartertemplate.data.datastore.AppDataStorePref
-import com.abdulmateen.cmpstartertemplate.network.DataState
-import com.abdulmateen.cmpstartertemplate.network.models.LoginResponse
-import com.abdulmateen.cmpstartertemplate.network.request.LoginRequestBody
-import com.abdulmateen.cmpstartertemplate.utils.PrefKeys
+import com.abdulmateen.cmpstartertemplate.core.data.datastore.AppDataStorePref
+import com.abdulmateen.cmpstartertemplate.auth.data.network.DataState
+import com.abdulmateen.cmpstartertemplate.auth.data.dto.LoginResponseDto
+import com.abdulmateen.cmpstartertemplate.auth.data.dto.request.LoginRequestBody
+import com.abdulmateen.cmpstartertemplate.core.utils.PrefKeys
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
@@ -22,13 +22,13 @@ class MainRepositoryImpl(
     private val dataStore: AppDataStorePref
 ): MainRepository {
 
-    override suspend fun login(body: LoginRequestBody): Flow<DataState<LoginResponse>> = flow {
+    override suspend fun login(body: LoginRequestBody): Flow<DataState<LoginResponseDto>> = flow {
         try {
             emit(DataState.loading())
             val response = httpClient.post("https://dummyjson.com/auth/login"){
                 contentType(ContentType.Application.Json)
                 setBody(body)
-            }.body<LoginResponse>()
+            }.body<LoginResponseDto>()
 
             dataStore.setBoolValue(prefKey = PrefKeys.IS_LOGGED_IN, true)
 
